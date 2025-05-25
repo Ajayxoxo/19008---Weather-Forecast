@@ -24,6 +24,7 @@ const WeatherDashboard: React.FC = () => {
   try {
     const res = await fetch("http://localhost:3000/api/weather");
     const data = await res.json();
+    console.log(data);
     setWeatherData(data);
   } catch (error) {
     console.error("Weather API error:", error);

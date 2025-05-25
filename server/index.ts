@@ -33,6 +33,7 @@ interface Forecast {
     temperature: number;
     humidity: number;
     icon: string;
+    label: string;
 }
 
 
@@ -45,11 +46,13 @@ app.get('/api/weather', async (req: Request, res: Response) => {
 
     try {
         const response = await axios.get(url);
+        console.log(response);
         const forecast: Forecast[] = (response.data as WeatherApiResponse).forecastHours.map((hour: ForecastHour) => ({
             condition: hour.weatherCondition?.description?.text || "Unknown",
             temperature: hour.temperature?.degrees ?? 0,
             humidity: hour.relativeHumidity ?? 0,
             icon: hour.weatherCondition?.iconBaseUri + ".svg" || "",
+            label: "poda punnaku",
         }));
 
         res.json(forecast);
