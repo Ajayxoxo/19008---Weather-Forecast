@@ -1,0 +1,98 @@
+.container-overall {
+    
+    color: #fefefe;
+    display: grid;
+    grid-template-columns: 75% 25%;
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw;  /* Full width of the viewport */
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow:  4px 4px 4px rgba(0, 0, 0, 0.815);
+}
+
+.blue-container,
+.orange-container {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.blue-container {
+    display: grid;
+    grid-template-rows: 20% 80%;
+    background: linear-gradient(135deg, #184350, #17424f);
+}
+
+.blue-container-title {
+    margin-top: 0.8em;
+    font-size: 300%;
+    font-weight: bold;
+}
+
+.blue-inner-grid {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  font-size: 50px;
+  align-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin: 5%; /* optional centering of the entire grid */
+}
+
+.blue-inner-grid img{
+    justify-self: center; /* horizontal */
+    align-self: center;  
+}
+
+.blue-inner-grid-bottom-text {
+    font-size: 120px;
+}
+
+.orange-container {
+  position: relative;
+  background: linear-gradient(135deg, #f5a142, #f58f2a);
+  height: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.orange-logo-wrapper {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.orange-logo-wrapper img {
+    margin-top: 2em;
+    width: 200px; /* Or whatever size works for your layout */
+}
+
+.orange-container-title {
+    margin-top: 0.8em;
+    font-size: 300%;
+    font-weight: bold;
+    text-align: right;
+}
+
+.orange-inner-grid  {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  align-content: center;
+  position: relative;
+}
+
+.orange-inner-grid-text {
+    font-size: 2em;
+    font-weight: 800;
+}
+
+.orange-inner-grid img {
+    width: 50%;
+    justify-self: center; /* horizontal */
+    align-self: center;  
+}
