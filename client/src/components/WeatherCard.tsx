@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./WeatherCard.css"
-import logo from '../assets/logo.png';
-import cloud from '../assets/cloud.png';
+import logo from "./../assets/logo.png"
+import cloud from "./../assets/cloud.png"
+
+
 
 interface currentConditions {
   probability: number,
@@ -18,7 +20,7 @@ const WeatherCard: React.FC<currentConditions> = ({ probability, qpf, probabilit
       <div className="blue-inner-grid">
         <img src={cloud}></img>
         <div>PROBABILITY%</div>
-        <div className="blue-inner-grid-bottom-text" >{qpf} mm</div>
+        <div className="blue-inner-grid-bottom-text" >{qpf}mm</div>
         <div className="blue-inner-grid-bottom-text">{probability}%</div>
       </div>
     </div>
@@ -31,7 +33,7 @@ const WeatherCard: React.FC<currentConditions> = ({ probability, qpf, probabilit
       <div className="orange-inner-grid">
         <img src={cloud}></img>
         <div className="orange-inner-grid-text">PROBABILITY%</div>
-        <div className="orange-inner-grid-text">{qpfForecast} mm</div>
+        <div className="orange-inner-grid-text">{qpfForecast}mm</div>
         <div className="orange-inner-grid-text">{probabilityForecast}%</div>
       </div>
     </div>

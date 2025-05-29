@@ -1,5 +1,4 @@
-import WeatherCard from './components/WeatherCard.tsx' 
-import React from 'react'
+import WeatherBannerApp from './components/WeatherBannerApp.tsx'
 import './App.css'
 
 function App() {
@@ -9,7 +8,7 @@ function App() {
   return (
     <>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-       <WeatherCard />
+        <WeatherBannerApp />
       </div>
     </>
   )
