@@ -25,6 +25,7 @@ const WeatherCard: React.FC<currentConditions> = ({ probability, qpf, probabilit
     <div className="orange-container">
       <div className="orange-logo-wrapper">
         <img src={logo} alt="CEAT LOGO" />
+        
       </div>
       <div className="orange-container-title">TOMORROW'S FORECAST</div>
       <div className="orange-inner-grid">
