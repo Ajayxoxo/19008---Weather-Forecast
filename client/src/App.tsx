@@ -1,4 +1,4 @@
-import WeatherBannerApp from './components/WeatherBannerApp.tsx'
+import WeatherBannerApp2 from './components/WeatherBannerApp2.tsx'
 import './App.css'
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        <WeatherBannerApp />
+        <WeatherBannerApp2 />
       </div>
     </>
   )

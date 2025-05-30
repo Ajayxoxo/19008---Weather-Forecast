@@ -44,21 +44,21 @@ const WeatherCard: React.FC<currentConditions> = ({ probability, qpf, probabilit
 const WeatherDashboard: React.FC = () => {
   const [weatherData, setWeatherData] = useState<currentConditions | null>(null);
 
-  useEffect(() => {
-    const fetchWeather = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/weather");
-        const data = await res.json();
-        console.log(data);
-        setWeatherData(data);
-      } catch (error) {
-        console.error("Weather API error:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchWeather = async () => {
+  //     try {
+  //       const res = await fetch("http://localhost:3000/api/weather");
+  //       const data = await res.json();
+  //       console.log(data);
+  //       setWeatherData(data);
+  //     } catch (error) {
+  //       console.error("Weather API error:", error);
+  //     }
+  //   };
 
 
-    fetchWeather();
-  }, []);
+  //   fetchWeather();
+  // }, []);
 
 
   return (
