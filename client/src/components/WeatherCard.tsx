@@ -16,7 +16,7 @@ const WeatherCard: React.FC<currentConditions> = ({ probability, qpf, probabilit
 
   <div className="container-overall">
     <div className="blue-container">
-      <div className="blue-container-title">_____________________________________________WEATHER FORECAST</div>
+      <div className="blue-container-title">____________WEATHER FORECAST</div>
       <div className="blue-inner-grid">
         <img src={cloud}></img>
         <div>PROBABILITY%</div>

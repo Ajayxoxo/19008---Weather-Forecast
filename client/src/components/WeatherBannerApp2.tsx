@@ -137,7 +137,7 @@ const WeatherBannerApp2: React.FC = () => {
   const WeatherCard: React.FC<currentConditions> = ({ probability, qpf, probabilityForecast, qpfForecast }) => (
     <div className="container-overall">
       <div className="blue-container">
-        <div className="blue-container-title">_____________________________________________WEATHER FORECAST</div>
+        <div className="blue-container-title">WEATHER FORECAST</div>
         <div className="blue-inner-grid">
           <img src={cloud}></img>
           <div>PROBABILITY%</div>
