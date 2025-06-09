@@ -1,0 +1,112 @@
+.container-overall {
+    color: #fefefe;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Shared styling for both containers */
+.blue-container,
+.orange-container {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Blue container with reduced font sizes */
+.blue-container {
+    display: grid;
+    grid-template-rows: 25% 75%;
+    background: linear-gradient(135deg, #184350, #17424f);
+}
+
+.blue-container-title {
+    margin-top: 0.5em;
+    font-size: 8rem;
+    font-weight: bold;
+    padding-left: 1rem;
+}
+
+.blue-inner-grid {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  font-size: 5rem;
+  align-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin: 5%;
+}
+
+.blue-inner-grid img {
+    width: 80%;
+    justify-self: center;
+    align-self: center;
+}
+
+.blue-inner-grid-bottom-text {
+    font-size: 8rem;
+}
+
+/* Orange container styling */
+.orange-container {
+  position: relative;
+  background: linear-gradient(135deg, #f5a142, #f58f2a);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.orange-logo-wrapper {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.orange-logo-wrapper img {
+    width: 120px;
+}
+
+.orange-container-title {
+    margin-top: 2rem;
+    font-size: 5rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+.orange-inner-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+  align-items: center;
+  align-content: center;
+}
+
+.orange-inner-grid-text {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.orange-inner-grid img {
+    width: 70%;
+    justify-self: center; 
+    align-self: center;
+}
+
+/* NIGHT MODE OVERRIDE */
+.container-overall.night {
+  color: orange;
+}
+
+.container-overall.night .blue-container {
+  background: linear-gradient(135deg, #0c1e26, #0a1b22); /* Darker blue */
+}
+
+.container-overall.night .orange-container {
+  background: linear-gradient(135deg, #503a1c, #7e4f20); /* Darker orange */
+}

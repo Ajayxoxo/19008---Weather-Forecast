@@ -1,23 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./WeatherCard.css";
-import logo from "./../assets/logo.png"
-import cloud from "./../assets/cloud.png"
+import logo from "./../assets/logo.png";
+import cloudDay from "./../assets/cloud.png";
+import cloudNight from "./../assets/cloud-night.png"; // Placeholder for night image
 
 const WeatherBannerApp2: React.FC = () => {
-
-  // Dynamic Variable -----------------------------------------
+  // Dynamic Variables
   const fetchWeatherTimer = 900000;
   const fetchVideoTimer = 5000;
-  const [section2VideoUrl, setSection2VideoUrl] = useState("/videos/red.mp4");
-  const [section3VideoUrl, setSection3VideoUrl] = useState("/videos/rainy.mp4");
-  const [section4VideoUrl, setSection4VideoUrl] = useState("/videos/2.mp4");
+  const weatherCardDisplayTime = 5000; // Duration (in ms) that each WeatherCard (section1 or section5) is visible
 
-  // Type script requirements --------------------------------- 
+  // State for video URLs
+  const [section2VideoUrl, setSection2VideoUrl] = useState<string>("/videos/red.mp4");
+  const [section3VideoUrl, setSection3VideoUrl] = useState<string>("/videos/rainy.mp4");
+  const [section4VideoUrl, setSection4VideoUrl] = useState<string>("/videos/2.mp4");
+
+  // Interfaces
   interface currentConditions {
-    probability: number,
-    qpf: number,
-    probabilityForecast: number,
-    qpfForecast: number,
+    probability: number;
+    qpf: number;
+    probabilityForecast: number;
+    qpfForecast: number;
+    isDaytime: boolean;
   }
 
   interface VideoInformation {
@@ -26,30 +30,33 @@ const WeatherBannerApp2: React.FC = () => {
     Section4: { [label: string]: string };
   }
 
-
-
-  // Use State used for retaining Data-----------------------------------
+  // State for weather and video data
   const [weatherData, setWeatherData] = useState<currentConditions | null>({
     probability: 25,
     qpf: 1.7,
     probabilityForecast: 30,
     qpfForecast: 6.9,
+    isDaytime: false,
+  });
+  const [videoData, setVideoData] = useState<VideoInformation | null>({
+    Section2: { No: "https://myvoiceclone.s3.ap-south-1.amazonaws.com/s3/no.mp4" },
+    Section3: { Sunny: "https://myvoiceclone.s3.ap-south-1.amazonaws.com/sunny.mp4" },
+    Section4: { "2": "https://myvoiceclone.s3.ap-south-1.amazonaws.com/s3/2.mp4" },
   });
 
-  const [videoData, setVideoData] = useState<VideoInformation | null>({
-    "Section2": {
-      "No": "https://myvoiceclone.s3.ap-south-1.amazonaws.com/s3/no.mp4"
-    },
-    "Section3": {
-      "Sunny": "https://myvoiceclone.s3.ap-south-1.amazonaws.com/sunny.mp4"
-    },
-    "Section4": {
-      "2": "https://myvoiceclone.s3.ap-south-1.amazonaws.com/s3/2.mp4"
-    }
-  })
+  // Section state flags - start with section1 (WeatherCard1) visible
+  const [section1, setSection1] = useState<boolean>(true);
+  const [section2, setSection2] = useState<boolean>(false);
+  const [section3, setSection3] = useState<boolean>(false);
+  const [section4, setSection4] = useState<boolean>(false);
+  const [section5, setSection5] = useState<boolean>(true); // New section for WeatherCard2
 
-  // Use Effect funtion that works when rerender happenss
-  //Use Effect for weather fetching --------------------
+  // Refs for video elements
+  const videoRef2 = useRef<HTMLVideoElement>(null);
+  const videoRef3 = useRef<HTMLVideoElement>(null);
+  const videoRef4 = useRef<HTMLVideoElement>(null);
+
+  // Fetch weather data
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -61,20 +68,18 @@ const WeatherBannerApp2: React.FC = () => {
       }
     };
 
-    fetchWeather(); // Fetch immediately on mount
-
-    const intervalId = setInterval(fetchWeather, fetchWeatherTimer); // Repeat every 900,000 ms (15 minutes)
-
-    return () => clearInterval(intervalId); // Clean up on unmount
+    fetchWeather();
+    const intervalId = setInterval(fetchWeather, fetchWeatherTimer);
+    return () => clearInterval(intervalId);
   }, []);
-  //Use Effect for Video fetching --------------------
-  // 1. Fetch videoData from API
+
+  // Fetch video mapping data
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
         const res = await fetch("http://localhost:3000/api/screen/mumbai");
         const data = await res.json();
-        setVideoData(data); // ✅ only update state
+        setVideoData(data);
         console.log("fetched new data");
       } catch (error) {
         console.error("Video API error:", error);
@@ -82,33 +87,28 @@ const WeatherBannerApp2: React.FC = () => {
     };
 
     fetchVideoData();
-
-    const intervalId = setInterval(fetchVideoData, fetchVideoTimer); // Repeat every 900,000 ms (15 minutes)
-
-    return () => clearInterval(intervalId); // Clean up on unmount
+    const intervalId = setInterval(fetchVideoData, fetchVideoTimer);
+    return () => clearInterval(intervalId);
   }, []);
 
+  // Update local video URLs when videoData changes
   useEffect(() => {
     if (!videoData) return;
-
     const section2Key = Object.keys(videoData.Section2 || {})[0];
     const section3Key = Object.keys(videoData.Section3 || {})[0];
     const section4Key = Object.keys(videoData.Section4 || {})[0];
 
-    // Match keys to LOCAL file paths (not using API URLs)
     const localSection2Map: Record<string, string> = {
-      "Red": "/videos/red.mp4",
-      "Orange": "/videos/orange.mp4",
-      "Yellow": "/videos/yellow.mp4",
+      Red: "/videos/red.mp4",
+      Orange: "/videos/orange.mp4",
+      Yellow: "/videos/yellow.mp4",
     };
-
     const localSection3Map: Record<string, string> = {
-      "Rainy": "/videos/rainy.mp4",
-      "Cloudy": "/videos/cloudy.mp4",
-      "Sunny": "/videos/sunny.mp4",
-      "Floody": "/videos/floody.mp4",
+      Rainy: "/videos/rainy.mp4",
+      Cloudy: "/videos/cloudy.mp4",
+      Sunny: "/videos/sunny.mp4",
+      Floody: "/videos/floody.mp4",
     };
-
     const localSection4Map: Record<string, string> = {
       "1": "/videos/1.mp4",
       "2": "/videos/2.mp4",
@@ -116,148 +116,181 @@ const WeatherBannerApp2: React.FC = () => {
       "4": "/videos/4.mp4",
     };
 
-    if (localSection2Map[section2Key]) {
-      setSection2VideoUrl(localSection2Map[section2Key]);
-    }
-
-    if (localSection3Map[section3Key]) {
-      setSection3VideoUrl(localSection3Map[section3Key]);
-    }
-
-    if (localSection4Map[section4Key]) {
-      setSection4VideoUrl(localSection4Map[section4Key]);
-    }
-
+    if (localSection2Map[section2Key]) setSection2VideoUrl(localSection2Map[section2Key]);
+    if (localSection3Map[section3Key]) setSection3VideoUrl(localSection3Map[section3Key]);
+    if (localSection4Map[section4Key]) setSection4VideoUrl(localSection4Map[section4Key]);
   }, [videoData]);
 
+  // Weather card components
+  const WeatherCard1: React.FC<currentConditions> = ({ probability, probabilityForecast, isDaytime }) => {
+    const containerClass = isDaytime ? "container-overall" : "container-overall night";
+    const iconSrc = isDaytime ? cloudDay : cloudNight;
+    return (
+      <div className={containerClass}>
 
+        <div className="blue-container">
+          <div className="blue-container-title">WEATHER FORECAST</div>
+            <img className="blue-img"src={iconSrc} alt="cloud"></img>
+            <div className="blue-text-up">PROBABILITY</div>
+            <div className="blue-text-down">{probability}%</div>
+        </div>
 
-
-  //React Component ------------------------------------------------
-  const WeatherCard: React.FC<currentConditions> = ({ probability, qpf, probabilityForecast, qpfForecast }) => (
-    <div className="container-overall">
-      <div className="blue-container">
-        <div className="blue-container-title">WEATHER FORECAST</div>
-        <div className="blue-inner-grid">
-          <img src={cloud}></img>
-          <div>PROBABILITY%</div>
-          <div className="blue-inner-grid-bottom-text" >{qpf}mm</div>
-          <div className="blue-inner-grid-bottom-text">{probability}%</div>
+        <div className="orange-container">
+          {/* <div className="orange-logo-wrapper">
+            <img src={logo} alt="CEAT LOGO" />
+          </div> */}
+          <div className="orange-container-title">TOMORROW'S FORECAST</div>
+            {/* <img className="blue-img"src={iconSrc} alt="cloud"></img> */}
+            <div className="orange-text-up">PROBABILITY</div>
+            <div className="orange-text-down">{probabilityForecast}%</div>
         </div>
       </div>
-      <div className="orange-container">
-        <div className="orange-logo-wrapper">
-          <img src={logo} alt="CEAT LOGO" />
+    );
+  };
+
+  const WeatherCard2: React.FC<currentConditions> = ({ probability, qpf, probabilityForecast, qpfForecast, isDaytime }) => {
+    const containerClass = isDaytime ? "container-overall" : "container-overall night";
+    const iconSrc = isDaytime ? cloudDay : cloudNight;
+    return (
+      <div className={containerClass}>
+
+        <div className="blue-container">
+          <div className="blue-container-title">WEATHER FORECAST</div>
+            <img src={iconSrc} alt="weather icon" />
+            <div className="">{qpf}mm</div>
         </div>
-        <div className="orange-container-title">TOMORROW'S FORECAST</div>
-        <div className="orange-inner-grid">
-          <img src={cloud}></img>
-          <div className="orange-inner-grid-text">PROBABILITY%</div>
-          <div className="orange-inner-grid-text">{qpfForecast}mm</div>
-          <div className="orange-inner-grid-text">{probabilityForecast}%</div>
+
+        <div className="orange-container">
+          {/* <div className="orange-logo-wrapper">
+            <img src={logo} alt="CEAT LOGO" />
+          </div> */}
+          <div className="orange-container-title">TOMORROW'S FORECAST</div>
+            <img src={iconSrc} alt="weather icon" />
+            <div className="orange-inner-grid-text">{qpfForecast}mm</div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
-  // VIDEO LOGIC-----------------------------------------------
-  const [section1, handleSection1] = useState(false);
-  const [section2, handleSection2] = useState(true);
-  const [section3, handleSection3] = useState(false);
-  const [section4, handleSection4] = useState(false);
-
-  const videoRef2 = useRef<HTMLVideoElement>(null);
-  const videoRef3 = useRef<HTMLVideoElement>(null);
-  const videoRef4 = useRef<HTMLVideoElement>(null);
-
-  function handleEndedSection1(): React.ReactEventHandler<HTMLVideoElement> {
-    return () => {
-      console.log("Section 1 ended");
-      handleSection1(prev => !prev);
-
-      // Get section2Key from videoData
-      const section2Key = videoData && videoData.Section2 ? Object.keys(videoData.Section2)[0] : undefined;
-
-      if (section2Key === "No") {
-        // Skip Section2, go directly to Section3
-        handleSection3(true);
-        if (videoRef3.current) videoRef3.current.play();
-      } else {
-        // Play Section2 normally
-        handleSection2(true);
-        if (videoRef2.current) videoRef2.current.play();
-      }
-    };
+  // Handlers for section transitions
+  function goToSection2Or3(): void {
+    const section2Key = videoData && videoData.Section2 ? Object.keys(videoData.Section2)[0] : undefined;
+    if (section2Key === "No") {
+      setSection3(true);
+      videoRef3.current?.play();
+    } else {
+      setSection2(true);
+      videoRef2.current?.play();
+    }
   }
 
-  function handleEndedSection2(): React.ReactEventHandler<HTMLVideoElement> {
-    return () => {
-      console.log("Section 2 video has ended");
-      handleSection2(false);
-      handleSection3(prev => !prev);
-      if (videoRef3.current) {
-        videoRef3.current.play();
-      }
-    };
+  function handleEndedSection1(): void {
+    setSection1(false);
+    goToSection2Or3();
   }
 
-  function handleEndedSection3(): React.ReactEventHandler<HTMLVideoElement> {
-    return () => {
-      console.log("Section 3 video has ended");
-      handleSection3(prev => !prev);
-      handleSection4(prev => !prev);
-      if (videoRef4.current) {
-        videoRef4.current.play();
-      }
-    };
+  function handleEndedSection2(): void {
+    setSection2(false);
+    setSection3(true);
+    videoRef3.current?.play();
   }
 
-  function handleEndedSection4(): React.ReactEventHandler<HTMLVideoElement> {
-    return () => {
-      console.log("Section 4 video has ended");
-      handleSection4(prev => !prev);
-      handleSection1(prev => !prev);
-      setTimeout(() => handleEndedSection1()({} as React.SyntheticEvent<HTMLVideoElement>), 5000);
-    };
+  function handleEndedSection3(): void {
+    setSection3(false);
+    setSection4(true);
+    videoRef4.current?.play();
   }
-  //actuall body -----------------------------------------------
+
+  function handleEndedSection4(): void {
+    setSection4(false);
+    setSection5(true);
+    // Show WeatherCard2 (section5) for weatherCardDisplayTime, then move to section1
+    setTimeout(() => {
+      setSection5(false);
+      setSection1(true);
+    }, weatherCardDisplayTime);
+  }
+
+  // Timer effect for section1 (WeatherCard1)
+  useEffect(() => {
+    let timerId: number;
+    if (section1) {
+      // When section1 becomes active, schedule transition after weatherCardDisplayTime
+      timerId = setTimeout(() => {
+        handleEndedSection1();
+      }, weatherCardDisplayTime);
+    }
+    return () => clearTimeout(timerId);
+  }, [section1]);
+
+  // Main render
   return (
+    <div className="outer-fixed-container">
+    
+    
+     {/*{section5 && weatherData && (
+        <WeatherCard1
+          probability={weatherData.probability}
+          qpf={weatherData.qpf}
+          probabilityForecast={weatherData.probabilityForecast}
+          qpfForecast={weatherData.qpfForecast}
+          isDaytime={weatherData.isDaytime}
+        />
+      )} */} 
+       {section1 && weatherData && (
+        <WeatherCard1
+          probability={weatherData.probability}
+          qpf={weatherData.qpf}
+          probabilityForecast={weatherData.probabilityForecast}
+          qpfForecast={weatherData.qpfForecast}
+          isDaytime={weatherData.isDaytime}
+        />
+      )}
 
-    <div className="fullscreen-banner">
-      {section1 && weatherData && <WeatherCard
-        probability={weatherData.probability}
-        qpf={weatherData.qpf}
-        probabilityForecast={weatherData.probabilityForecast}
-        qpfForecast={weatherData.qpfForecast}
-      />}
+      {section2 && (
+        <video
+          src={section2VideoUrl}
+          autoPlay
+          muted
+          ref={videoRef2}
+          onEnded={handleEndedSection2}
+          className="fullscreen-video"
+        />
+      )}
 
-      { section2 && <video
-        src={section2VideoUrl}
-        autoPlay
-        muted
-        ref={videoRef2}
-        onEnded={handleEndedSection2()}
-        className="fullscreen-video"
-      />}
+      {section3 && (
+        <video
+          src={section3VideoUrl}
+          autoPlay
+          muted
+          ref={videoRef3}
+          onEnded={handleEndedSection3}
+          className="fullscreen-video"
+        />
+      )}
 
-      {section3 && <video
-        src={section3VideoUrl}
-        autoPlay
-        muted
-        ref={videoRef3}
-        onEnded={handleEndedSection3()}
-        className="fullscreen-video"
-      />}
+      {section4 && (
+        <video
+          src={section4VideoUrl}
+          autoPlay
+          muted
+          ref={videoRef4}
+          onEnded={handleEndedSection4}
+          className="fullscreen-video"
+        />
+      )}
 
-      {section4 && <video
-        src={section4VideoUrl}
-        autoPlay
-        muted
-        ref={videoRef4}
-        onEnded={handleEndedSection4()}
-        className="fullscreen-video"
-      />}
+      {section5 && weatherData && (
+        <WeatherCard2
+          probability={weatherData.probability}
+          qpf={weatherData.qpf}
+          probabilityForecast={weatherData.probabilityForecast}
+          qpfForecast={weatherData.qpfForecast}
+          isDaytime={weatherData.isDaytime}
+        />
+      )} 
     </div>
+   
   );
 };
 
